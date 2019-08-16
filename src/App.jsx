@@ -12,14 +12,14 @@ class App extends Component {
     super(props);
     this.state = {
       city:"Espoo",
-      forcastDays:10,
+      forcastDaysNum:5,
       isDegrees : true,
       isLoading: true
     }
   }
  updateWeather = () =>{
-  const {city,forcastDays} = this.state;
-  const URL = `https://api.apixu.com/v1/forecast.json?key=${API_KEY}  &q=${city} &days=${forcastDays}`;
+  const {city,forcastDaysNum} = this.state;
+  const URL = `https://api.apixu.com/v1/forecast.json?key=${API_KEY}  &q=${city} &days=${forcastDaysNum}`;
   axios.get(URL)
   .then(res=>{
     return res.data;
@@ -32,7 +32,8 @@ class App extends Component {
       text:data.current.condition.text,
       iconURL: data.current.condition.icon,
       location:data.location.name,
-      isLoading:false
+      isLoading:false,
+      forecastDays:data.forecast.forecastday
     })
   })
   .catch(err=>{
@@ -59,12 +60,12 @@ class App extends Component {
   }
 
   render(){
-    const {isLoading,isDegrees,temp_c,temp_f,isDay,iconURL,text,city} = this.state;
+    const {isLoading,isDegrees,temp_c,temp_f,isDay,iconURL,text,city,forecastDays} = this.state;
     return <div className="app-container">
     {isLoading? <h2>Weather Data is Loading.......</h2>:
     <div className="main-container">
       <div className="top-section"><TopComponent isDegrees={isDegrees} location={city} eventEmitter={this.props.eventEmitter} text={text} iconURL={iconURL} temp_c={temp_c} temp_f={temp_f} isDay={isDay}/></div>
-      <div className="bottom-section"><BottomComponent isDegrees={isDegrees} /> </div>
+      <div className="bottom-section"><BottomComponent isDegrees={isDegrees} forecastDays={forecastDays} /> </div>
       <button className="btn btn-change-units" onClick={this.changeUnitHandler}>Change to {isDegrees?"º F":"º C"}</button>
     </div>}    
     </div>

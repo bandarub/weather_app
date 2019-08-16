@@ -21,11 +21,10 @@ locationHandler = (e)=>{
 changeLocationHandler = (e) =>{
     this.setState({location: e.target.value})
 }
-selectCity = ()=>{
+selectCity = (e)=>{
     const {location} = this.state;
     const {eventEmitter} = this.props;
     this.setState({isSlectlocationOpen:false})
-
     eventEmitter.emit("updateWeather",location)
 }
 render(){
